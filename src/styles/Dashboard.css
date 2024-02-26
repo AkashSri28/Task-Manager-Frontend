@@ -1,0 +1,55 @@
+.container {
+    display: flex;
+  }
+  
+  .left-section {
+    flex: 1;
+    padding: 20px;
+    background-color: #f0f0f0;
+  }
+  
+  .logo {
+    width: 100px;
+    height: 100px;
+  }
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  nav ul li {
+    margin-bottom: 10px;
+  }
+  
+  nav ul li a {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .right-section {
+    flex: 3;
+    padding: 20px;
+    background-color: #fff;
+  }
+  
+  .top-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .user-greeting {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .date {
+    font-size: 1.2rem;
+    color: #666;
+  }
+  
+  .bottom-section {
+    /* Add styles for the bottom section */
+  }
+  
