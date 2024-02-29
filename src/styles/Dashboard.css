@@ -8,24 +8,7 @@
     background-color: #f0f0f0;
   }
   
-  .logo {
-    width: 100px;
-    height: 100px;
-  }
   
-  nav ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  nav ul li {
-    margin-bottom: 10px;
-  }
-  
-  nav ul li a {
-    color: #333;
-    text-decoration: none;
-  }
   
   .right-section {
     flex: 3;
@@ -49,7 +32,5 @@
     color: #666;
   }
   
-  .bottom-section {
-    /* Add styles for the bottom section */
-  }
+
   

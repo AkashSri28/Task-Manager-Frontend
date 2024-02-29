@@ -1,5 +1,5 @@
 import React from 'react';
-import DashboardNav from './DashboardNav';
+import DashboardNav from '../components/DashboardNav';
 import '../styles/Dashboard.css';
 
 function Analytics() {

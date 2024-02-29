@@ -6,18 +6,22 @@ import Registration from './pages/Registration';
 import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
+import DashboardNav from './components/DashboardNav';
 
 const App = () => {
   return (
-    <>
-      <Routes>
-        <Route path="/login" element={<Login/>} />
-        <Route path="/register" element={<Registration/>} />
-        <Route path="/" element={<Dashboard/>} />
-        <Route path="/analytics" element={<Analytics/>} />
-        <Route path="/settings" element={<Settings/>} />
-      </Routes>
-    </>
+    <div className='App'>
+      <DashboardNav/>
+        <div className='pages'>
+            <Routes>
+              <Route path="/login" element={<Login/>} />
+              <Route path="/register" element={<Registration/>} />
+              <Route path="/" element={<Dashboard/>} />
+              <Route path="/analytics" element={<Analytics/>} />
+              <Route path="/settings" element={<Settings/>} />
+            </Routes>
+        </div>
+    </div>
   );
 };
 
