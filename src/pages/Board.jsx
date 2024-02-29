@@ -8,11 +8,19 @@ import axios from 'axios';
 function Board() {
     const [cards, setCards] = useState([]);
 
+    const [showDropdown, setShowDropdown] = useState(false);
+
+    const handleDropdownToggle = () => {
+        setShowDropdown(!showDropdown);
+    };
+
     useEffect(() => {
         const fetchCards = async () => {
           try {
             const response = await axios.get('http://localhost:5000/api/cards');
+    
             setCards(response.data);
+            console.log(response.data);
           } catch (error) {
             console.error(error);
           }
@@ -82,6 +90,23 @@ function Board() {
         console.log(cards);
       };
 
+      const handleActionChange = (cardId, action) => {
+        switch (action) {
+          case 'edit':
+            // Handle edit action
+            break;
+          case 'share':
+            // Handle share action
+            break;
+          case 'delete':
+            // Handle delete action
+            break;
+          default:
+            // Do nothing
+            break;
+        }
+      };
+
     const completedTasksCounter = (tasks)=>{
         return tasks.filter((task) => task.completed).length;
     }
@@ -115,13 +140,23 @@ function Board() {
                         .filter(card => card.column === 'Backlog')
                         .map((card) => (
                             <div key={card.id} className="card">
-                               <span className={`priority-dot ${card.priority.toLowerCase()}`}></span>
-                                {card.priority}
-                                <div className="card-actions">
-                                <button>Edit</button>
-                                <button>Share</button>
-                                <button>Delete</button>
+                                <div className='card-priority-top'>
+                                    <div>
+                                        <span className={`priority-dot ${card.priority.toLowerCase()}`}></span>
+                                        {card.priority}
+                                    </div>
+                                    <div className="card-actions">
+                                        <button onClick={handleDropdownToggle}>...</button>
+                                        {showDropdown && (
+                                            <div className="dropdown-menu">
+                                            <button>Edit</button>
+                                            <button>Share</button>
+                                            <button>Delete</button>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
+                               
                               <div className="card-title">{card.title}</div>
                               <div className="card-priority">Priority: {card.priority}</div>
                               <div className="card-tasks">
@@ -146,8 +181,8 @@ function Board() {
                               
                             {card.dueDate && <div className="card-due-date">Due Date: {card.dueDate}</div>}
                             <div className="card-columns">
-                                <span onClick={() => moveCard(card._id, 'Backlog')}>Backlog</span>
-                                <span onClick={() => moveCard(card._id, 'In Progress')}>In Progress</span>
+                                <span onClick={() => moveCard(card._id, 'To do')}>To do</span>
+                                <span onClick={() => moveCard(card._id, 'In progress')}>In progress</span>
                                 <span onClick={() => moveCard(card._id, 'Done')}>Done</span>
                             </div>
                         </div>
@@ -156,21 +191,30 @@ function Board() {
                     </div>
                 </div>
                 <div className="column">
-                    <h3>To-do</h3>
+                    <h3>To do</h3>
                     <button onClick={handleAddTask}>Add Task</button>
-                    {showModal && <Modal/>}
+                    {showModal && <Modal handleCloseModal={handleCloseModal}/>}
                     <div className='cards-container'>
                     {
                         cards
-                        .filter(card => card.column === 'To-do')
+                        .filter(card => card.column === 'To do')
                         .map((card) => (
                             <div key={card.id} className="card">
-                               <span className={`priority-dot ${card.priority.toLowerCase()}`}></span>
-                                {card.priority}
-                                <div className="card-actions">
-                                <button>Edit</button>
-                                <button>Share</button>
-                                <button>Delete</button>
+                               <div className='card-priority-top'>
+                                    <div>
+                                        <span className={`priority-dot ${card.priority.toLowerCase()}`}></span>
+                                        {card.priority}
+                                    </div>
+                                    <div className="card-actions">
+                                        <button onClick={handleDropdownToggle}>...</button>
+                                        {showDropdown && (
+                                            <div className="dropdown-menu">
+                                            <button>Edit</button>
+                                            <button>Share</button>
+                                            <button>Delete</button>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                               <div className="card-title">{card.title}</div>
                               <div className="card-priority">Priority: {card.priority}</div>
@@ -197,7 +241,7 @@ function Board() {
                             {card.dueDate && <div className="card-due-date">Due Date: {card.dueDate}</div>}
                             <div className="card-columns">
                                 <span onClick={() => moveCard(card._id, 'Backlog')}>Backlog</span>
-                                <span onClick={() => moveCard(card._id, 'In Progress')}>In Progress</span>
+                                <span onClick={() => moveCard(card._id, 'In progress')}>In progress</span>
                                 <span onClick={() => moveCard(card._id, 'Done')}>Done</span>
                             </div>
                         </div>
@@ -207,12 +251,118 @@ function Board() {
                     
                 </div>
                 <div className="column">
-                    <h3>In Progress</h3>
-                    {/* Your In Progress content goes here */}
+                    <h3>In progress</h3>
+                    <div className='cards-container'>
+                    {
+                        cards
+                        .filter(card => card.column === 'In progress')
+                        .map((card) => (
+                            <div key={card.id} className="card">
+                               <div className='card-priority-top'>
+                                    <div>
+                                        <span className={`priority-dot ${card.priority.toLowerCase()}`}></span>
+                                        {card.priority}
+                                    </div>
+                                    <div className="card-actions">
+                                        <button onClick={handleDropdownToggle}>...</button>
+                                        {showDropdown && (
+                                            <div className="dropdown-menu">
+                                            <button>Edit</button>
+                                            <button>Share</button>
+                                            <button>Delete</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                              <div className="card-title">{card.title}</div>
+                              <div className="card-priority">Priority: {card.priority}</div>
+                              <div className="card-tasks">
+                                <label>Checklist </label>
+                                <span>
+                                    {completedTasksCounter(card.tasks)}/{totalTasksCounter(totalTasksCounter)}
+                                </span>
+                                <ul>
+                                {card.tasks.map((task) => (
+                                    <li key={task.id} className='task'>
+                                    <input
+                                        type="checkbox"
+                                        checked={task.completed}
+                                        onChange={() => toggleTaskCompletion(card.id, task.id)}
+                                    />
+                                    <span>{task.title}</span>
+                                    <button onClick={() => deleteTask(card.id, task.id)}>Delete</button>
+                                    </li>
+                                ))}
+                                </ul>
+                            </div>
+                              
+                            {card.dueDate && <div className="card-due-date">Due Date: {card.dueDate}</div>}
+                            <div className="card-columns">
+                                <span onClick={() => moveCard(card._id, 'Backlog')}>Backlog</span>
+                                <span onClick={() => moveCard(card._id, 'To do')}>To do</span>
+                                <span onClick={() => moveCard(card._id, 'Done')}>Done</span>
+                            </div>
+                        </div>
+                        ))
+                    }
+                    </div>
                 </div>
                 <div className="column">
                     <h3>Done</h3>
-                    {/* Your Done content goes here */}
+                    <div className='cards-container'>
+                    {
+                        cards && cards
+                        .filter(card => card.column === 'Done')
+                        .map((card) => (
+                            <div key={card.id} className="card">
+                               <div className='card-priority-top'>
+                                    <div>
+                                        <span className={`priority-dot ${card.priority.toLowerCase()}`}></span>
+                                        {card.priority}
+                                    </div>
+                                    <div className="card-actions">
+                                        <button onClick={handleDropdownToggle}>...</button>
+                                        {showDropdown && (
+                                            <div className="dropdown-menu">
+                                            <button>Edit</button>
+                                            <button>Share</button>
+                                            <button>Delete</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                              <div className="card-title">{card.title}</div>
+                              <div className="card-priority">Priority: {card.priority}</div>
+                              <div className="card-tasks">
+                                <label>Checklist </label>
+                                <span>
+                                    {completedTasksCounter(card.tasks)}/{totalTasksCounter(totalTasksCounter)}
+                                </span>
+                                <ul>
+                                {card.tasks && card.tasks.map((task) => (
+                                    <li key={task.id} className='task'>
+                                    <input
+                                        type="checkbox"
+                                        checked={task.completed}
+                                        onChange={() => toggleTaskCompletion(card.id, task.id)}
+                                    />
+                                    <span>{task.title}</span>
+                                    <button onClick={() => deleteTask(card.id, task.id)}>Delete</button>
+                                    </li>
+                                ))}
+                                </ul>
+                            </div>
+                              
+                            {card.dueDate && <div className="card-due-date">Due Date: {card.dueDate}</div>}
+                            <div className="card-columns">
+                                <span onClick={() => moveCard(card._id, 'Backlog')}>Backlog</span>
+                                <span onClick={() => moveCard(card._id, 'To do')}>To do</span>
+                                <span onClick={() => moveCard(card._id, 'In progress')}>In progress</span>
+                            </div>
+                        </div>
+                        ))
+                    }
+                    </div>
                 </div>
             </div>
 

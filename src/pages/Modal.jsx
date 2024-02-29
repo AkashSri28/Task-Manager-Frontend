@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import '../styles/Modal.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
+import axios from 'axios';
 
-function Modal() {
-  const [tasks, setTasks] = useState([
-  ]);
+function Modal({handleCloseModal}) {
+  const [tasks, setTasks] = useState([]);
 
   const [title, setTitle] = useState('');
   const [priority, setPriority] = useState('');
-  const [dueDate, setDueDate] = useState()
+  const [dueDate, setDueDate] = useState(null)
 
   const addNewTask = () => {
     const newId = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
@@ -31,7 +31,7 @@ function Modal() {
   const completedTasksCount = tasks.filter((task) => task.completed).length;
   const totalTasksCount = tasks.length;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (title.trim() === '' || priority.trim() === '' || tasks.length < 1) {
@@ -40,14 +40,25 @@ function Modal() {
     }
 
     // Send data to backend
-    console.log('Title:', title);
-    console.log('Priority:', priority);
-    console.log('Checklist:', tasks);
+    try {
+        const response = await axios.post('http://localhost:5000/api/cards', {
+          title,
+          priority,
+          tasks,
+          dueDate
+        });
+  
+        console.log('Response from backend:', response.data);
+  
+        // Clear form fields
+        setTitle('');
+        setPriority('');
+        setTasks([]);
+      } catch (error) {
+        console.error('Error sending data to backend:', error);
+      }
 
-    // Clear form fields
-    setTitle('');
-    setPriority('');
-    setTasks([]);
+      handleCloseModal();
   };
 
   return (
@@ -65,9 +76,9 @@ function Modal() {
         <div>
           <label>Select Priority:</label>
           <div>
-            <button onClick={() => setPriority('High')}>High Priority</button>
-            <button onClick={() => setPriority('Moderate')}>Moderate Priority</button>
-            <button onClick={() => setPriority('Low')}>Low Priority</button>
+            <button onClick={() => setPriority('high')}>High Priority</button>
+            <button onClick={() => setPriority('medium')}>Moderate Priority</button>
+            <button onClick={() => setPriority('low')}>Low Priority</button>
           </div>
         </div>
         <div>
@@ -108,7 +119,7 @@ function Modal() {
             selected={dueDate}
             onChange={(date) => setDueDate(date)}
           />
-          <button>Cancel</button>
+          <button onClick={handleCloseModal}>Cancel</button>
           <button onClick={handleSubmit}>Save</button>
         </div>
       </div>

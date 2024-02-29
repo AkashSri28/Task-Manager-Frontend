@@ -4,7 +4,6 @@
   }
   
   .card {
-    width: 300px;
     margin: 10px;
     padding: 10px;
     border: 1px solid #ccc;
@@ -16,6 +15,13 @@
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
+  }
+
+  .card-priority-top{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .priority-dot {
@@ -39,8 +45,42 @@
   }
 
   .card-actions {
-    margin-left: auto;
-    display: flex;
+    position: relative;
+  }
+  
+  .card-actions button {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    padding: 5px 10px;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    z-index: 100;
+    display: none;
+  }
+  
+  .dropdown-menu button {
+    display: block;
+    width: 100%;
+    padding: 5px 10px;
+    border: none;
+    background-color: transparent;
+  }
+  
+  .dropdown-menu button:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .card-actions:hover .dropdown-menu {
+    display: block;
   }
   
   .card-tasks {
