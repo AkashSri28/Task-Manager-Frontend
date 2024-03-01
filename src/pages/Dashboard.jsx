@@ -8,55 +8,11 @@ import '../styles/Dashboard.css';
 
 const Dashboard = () => {
 
-  const [cards, setCards] = useState([]);
+  
   const [newCardTitle, setNewCardTitle] = useState('');
   const [newCardDescription, setNewCardDescription] = useState('');
 
-  useEffect(() => {
-    const fetchCards = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/cards');
-        setCards(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
 
-    fetchCards();
-  }, []);
-
-  // const handleCreateCard = async (boardId, listId) => {
-  //   try {
-  //     const response = await axios.post(`http://localhost:3000/boards/${boardId}/lists/${listId}/cards`, {
-  //       title: newCardTitle,
-  //       description: newCardDescription,
-  //     });
-
-  //     const updatedBoards = boards.map((board) => {
-  //       if (board._id === boardId) {
-  //         return {
-  //           ...board,
-  //           lists: board.lists.map((list) => {
-  //             if (list._id === listId) {
-  //               return {
-  //                 ...list,
-  //                 cards: [...list.cards, response.data],
-  //               };
-  //             }
-  //             return list;
-  //           }),
-  //         };
-  //       }
-  //       return board;
-  //     });
-
-  //     setBoards(updatedBoards);
-  //     setNewCardTitle('');
-  //     setNewCardDescription('');
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   // const handleDeleteCard = async (boardId, listId, cardId) => {
   //   try {
@@ -88,6 +44,7 @@ const Dashboard = () => {
 
   return (
     <div className="container">
+      <DashboardNav/>
       <Board/>
       {/* <h2>Dashboard</h2>
       {boards.map((board) => (

@@ -3,13 +3,16 @@ import '../styles/Modal.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
 import axios from 'axios';
+import { useCardsContext } from '../hooks/useCardsContext';
 
 function Modal({handleCloseModal}) {
   const [tasks, setTasks] = useState([]);
 
   const [title, setTitle] = useState('');
   const [priority, setPriority] = useState('');
-  const [dueDate, setDueDate] = useState(null)
+  const [dueDate, setDueDate] = useState('')
+
+  const {dispatch} = useCardsContext();
 
   const addNewTask = () => {
     const newId = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
@@ -54,6 +57,10 @@ function Modal({handleCloseModal}) {
         setTitle('');
         setPriority('');
         setTasks([]);
+        dueDate('')
+
+        //update global state
+        dispatch({type: 'CREATE_CARD', payload: response.data})
       } catch (error) {
         console.error('Error sending data to backend:', error);
       }

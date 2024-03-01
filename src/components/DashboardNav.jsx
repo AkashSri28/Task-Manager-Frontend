@@ -1,11 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import '../styles/Login.css';
+import '../styles/Dashboard.css';
 
 function DashboardNav() {
   return (
-    <header>
-      <div className="container">
+      <div className="dashboard-nav">
         <img src="path-to-your-logo" alt="Logo" className="logo" />
         <Link to="/">Board</Link>
         <Link to="/analytics">Analytics</Link>
@@ -20,7 +19,6 @@ function DashboardNav() {
         </nav> */}
         <button className="logout-btn">Logout</button>
       </div>
-    </header>
   )
 }
 

@@ -1,6 +1,6 @@
 // App.js
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
 import Dashboard from './pages/Dashboard';
@@ -11,7 +11,7 @@ import DashboardNav from './components/DashboardNav';
 const App = () => {
   return (
     <div className='App'>
-      <DashboardNav/>
+      <BrowserRouter>
         <div className='pages'>
             <Routes>
               <Route path="/login" element={<Login/>} />
@@ -21,6 +21,7 @@ const App = () => {
               <Route path="/settings" element={<Settings/>} />
             </Routes>
         </div>
+      </BrowserRouter>
     </div>
   );
 };

@@ -1,0 +1,41 @@
+    /* DeleteModal.css */
+.delete-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .delete-modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  .delete-modal-content h2 {
+    margin-bottom: 20px;
+  }
+  
+  .delete-modal-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .delete-modal-buttons button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .delete-modal-buttons button:hover {
+    background-color: #f0f0f0;
+  }
+  
+ 
+  

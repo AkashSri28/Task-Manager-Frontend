@@ -1,8 +1,8 @@
-.right-section {
+/* .right-section {
     flex: 3;
     padding: 20px;
     background-color: #fff;
-  }
+  } */
   
   .top-section {
     display: flex;
@@ -44,11 +44,14 @@
   }
   
   .column {
-    flex-grow: 1;
+    flex: 1;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 10px;
     padding: 10px;
     background-color: #EEF2F5;
+    height: 73vh;
+    width: 250px;
+    overflow-y: auto;
   }
   
   .column h3 {

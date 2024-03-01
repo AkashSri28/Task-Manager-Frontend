@@ -30,7 +30,7 @@ const Login = () => {
   };
 
   return (
-    <div className='container'>
+    <div className='login-container'>
       <div className='left-section'>
         <div className='logo'>
           <img src="/images/center-logo.png" alt="Logo" id="center-logo" />

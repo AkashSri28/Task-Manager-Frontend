@@ -4,23 +4,53 @@ import '../styles/Board.css';
 import '../styles/card.css';
 import TestComponent from './TestComponent';
 import axios from 'axios';
+import { useCardsContext } from '../hooks/useCardsContext';
+import DeleteModal from './DeleteModal';
 
 function Board() {
-    const [cards, setCards] = useState([]);
+    const {cards, dispatch} = useCardsContext()
+
+    //create an active card id tracker
+    const [activeCardId, setActiveCardId] = useState('');
 
     const [showDropdown, setShowDropdown] = useState(false);
 
     const handleDropdownToggle = () => {
         setShowDropdown(!showDropdown);
     };
+    
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    const handleDeleteClick = (cardId) => {
+        setActiveCardId(cardId)
+        setShowDeleteModal(true);
+      };
+    
+      const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false);
+      };
+    
+      const handleDelete = async() => {
+        try {
+            console.log(activeCardId)
+            // Send DELETE request to backend API
+            const response = await axios.delete(`http://localhost:5000/api/cards/${activeCardId}`);
+            // Dispatch action to delete card
+            console.log(response.data)
+            dispatch({ type: 'DELETE_CARD', payload: activeCardId });
+            setActiveCardId('');
+            setShowDeleteModal(false);
+          } catch (error) {
+            console.error(error);
+          }
+      };
 
     useEffect(() => {
         const fetchCards = async () => {
           try {
             const response = await axios.get('http://localhost:5000/api/cards');
     
-            setCards(response.data);
-            console.log(response.data);
+            dispatch({type: 'SET_CARDS', payload: response.data});
           } catch (error) {
             console.error(error);
           }
@@ -47,47 +77,44 @@ function Board() {
     };
 
     const toggleTaskCompletion = (cardId, taskId) => {
-        setCards(
-          cards.map((card) =>
-            card.id === cardId
-              ? {
-                  ...card,
-                  tasks: card.tasks.map((task) =>
-                    task.id === taskId ? { ...task, completed: !task.completed } : task
-                  ),
-                }
-              : card
-          )
-        );
+        // setCards(
+        //   cards.map((card) =>
+        //     card.id === cardId
+        //       ? {
+        //           ...card,
+        //           tasks: card.tasks.map((task) =>
+        //             task.id === taskId ? { ...task, completed: !task.completed } : task
+        //           ),
+        //         }
+        //       : card
+        //   )
+        // );
       };
 
       const deleteTask = (cardId, taskId) => {
-        setCards(
-          cards.map((card) =>
-            card.id === cardId
-              ? {
-                  ...card,
-                  tasks: card.tasks.filter((task) => task.id !== taskId),
-                }
-              : card
-          )
-        );
+        // setCards(
+        //   cards.map((card) =>
+        //     card.id === cardId
+        //       ? {
+        //           ...card,
+        //           tasks: card.tasks.filter((task) => task.id !== taskId),
+        //         }
+        //       : card
+        //   )
+        // );
       };
 
       const moveCard = (cardId, column) => {
-        console.log(cards);
-        console.log(cardId.toString());
-        setCards(
-          cards.map((card) =>
-            card._id === cardId.toString()
-              ? {
-                  ...card,
-                  column,
-                }
-              : card
-          )
-        );
-        console.log(cards);
+        // setCards(
+        //   cards.map((card) =>
+        //     card._id === cardId.toString()
+        //       ? {
+        //           ...card,
+        //           column,
+        //         }
+        //       : card
+        //   )
+        // );
       };
 
       const handleActionChange = (cardId, action) => {
@@ -115,7 +142,7 @@ function Board() {
     }
 
   return (
-    <div className="right-section">
+    <div className="board">
         <div className="top-section">
           <div className="user-greeting">Hello {user}</div>
           <div className="date">{formatDate(new Date())}</div>
@@ -132,11 +159,17 @@ function Board() {
                 </div>
             </div>
             <div className="bottom-bottom-section">
+            {showDeleteModal && (
+                <DeleteModal
+                handleCloseDeleteModal={handleCloseDeleteModal}
+                handleDelete={handleDelete}
+                />
+            )}
                 <div className="column">
                     <h3>Backlog</h3>
                     <div className='cards-container'>
                     {
-                        cards
+                        cards && cards
                         .filter(card => card.column === 'Backlog')
                         .map((card) => (
                             <div key={card.id} className="card">
@@ -196,7 +229,7 @@ function Board() {
                     {showModal && <Modal handleCloseModal={handleCloseModal}/>}
                     <div className='cards-container'>
                     {
-                        cards
+                        cards && cards
                         .filter(card => card.column === 'To do')
                         .map((card) => (
                             <div key={card.id} className="card">
@@ -211,7 +244,7 @@ function Board() {
                                             <div className="dropdown-menu">
                                             <button>Edit</button>
                                             <button>Share</button>
-                                            <button>Delete</button>
+                                            <button onClick={()=>handleDeleteClick(card._id)}>Delete</button>
                                             </div>
                                         )}
                                     </div>
@@ -254,7 +287,7 @@ function Board() {
                     <h3>In progress</h3>
                     <div className='cards-container'>
                     {
-                        cards
+                        cards && cards
                         .filter(card => card.column === 'In progress')
                         .map((card) => (
                             <div key={card.id} className="card">
