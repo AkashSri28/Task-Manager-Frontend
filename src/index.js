@@ -5,13 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { CardsContextProvider } from './context/CardContext';
+import { AuthContextProvider } from './context/AuthContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <CardsContextProvider>
-        <App />
-    </CardsContextProvider>
+    <AuthContextProvider>
+      <CardsContextProvider>
+          <App />
+      </CardsContextProvider>
+    </AuthContextProvider>
   </React.StrictMode>
 );
 

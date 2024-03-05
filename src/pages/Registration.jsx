@@ -18,8 +18,10 @@ const Registration = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log(name, email, password);
+
     try {
-      await axios.post('http://localhost:3000/register', {
+      await axios.post('http://localhost:5000/api/user/register', {
         name,
         email,
         password,
@@ -33,7 +35,7 @@ const Registration = () => {
   };
 
   return (
-    <div className='container'>
+    <div className='login-container'>
       <div className='left-section'>
         <div className='logo'>
           <img src="/images/center-logo.png" alt="Logo" id="center-logo" />
@@ -59,7 +61,7 @@ const Registration = () => {
               type="email"
               value={email}
               placeholder='Email'
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </label>
           <br />
@@ -77,14 +79,14 @@ const Registration = () => {
               type="password"
               value={confirmPassword}
               placeholder='Confirm Password'
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </label>
           <br />
 
-          <button type="submit">Login</button>
+          <button type="submit">Register</button>
           <p className='register-link'>Have no account yet?</p>
-          <button className="register-btn" onClick={handleLoginClick}>Register</button>
+          <button className="register-btn" onClick={handleLoginClick}>Login</button>
         </form>
         
       </div>
