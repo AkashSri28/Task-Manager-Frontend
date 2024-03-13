@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Login.css';
+import useLogin from '../hooks/useLogin';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const { login, isLoading, error } = useLogin();
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
@@ -16,17 +18,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.post('http://localhost:3000/login', {
-        username,
-        password,
-      });
-
-      localStorage.setItem('token', response.data.token);
-      navigate('/dashboard');
-    } catch (error) {
-      console.error(error);
-    }
+    await login(email, password);
   };
 
   return (
@@ -45,8 +37,8 @@ const Login = () => {
           <label>
             <input
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </label>
           <br />
@@ -58,7 +50,10 @@ const Login = () => {
             />
           </label>
           <br />
-          <button type="submit">Login</button>
+          {error && <div>{error}</div>}
+          <button type="submit" disabled={isLoading}>
+              {isLoading ? 'Logging in...' : 'Login'}
+          </button>
           <p className='register-link'>Have no account yet?</p>
           <button className="register-btn" onClick={handleRegistrationClick}>Register</button>
         </form>

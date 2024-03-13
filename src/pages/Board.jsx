@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react';
 import Modal from './Modal';
 import '../styles/Board.css';
 import '../styles/card.css';
-import TestComponent from './TestComponent';
 import axios from 'axios';
 import { useCardsContext } from '../hooks/useCardsContext';
 import DeleteModal from './DeleteModal';
+import useLogout from '../hooks/useLogout';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function Board() {
     const {cards, dispatch} = useCardsContext()
+
+    const {user} = useAuthContext();
 
     //create an active card id tracker
     const [activeCardId, setActiveCardId] = useState('');
@@ -34,9 +37,13 @@ function Board() {
         try {
             console.log(activeCardId)
             // Send DELETE request to backend API
-            const response = await axios.delete(`http://localhost:5000/api/cards/${activeCardId}`);
+            const response = await axios.delete(`http://localhost:5000/api/cards/${activeCardId}`,{
+                headers: {
+                    authorization: `Bearer ${user.token}` // Set the token in the Authorization header
+                }
+            });
+
             // Dispatch action to delete card
-            console.log(response.data)
             dispatch({ type: 'DELETE_CARD', payload: activeCardId });
             setActiveCardId('');
             setShowDeleteModal(false);
@@ -48,7 +55,11 @@ function Board() {
     useEffect(() => {
         const fetchCards = async () => {
           try {
-            const response = await axios.get('http://localhost:5000/api/cards');
+            const response = await axios.get('http://localhost:5000/api/cards', {
+                headers: {
+                    authorization: `Bearer ${user.token}` // Set the token in the Authorization header
+                }
+            });
     
             dispatch({type: 'SET_CARDS', payload: response.data});
           } catch (error) {
@@ -56,10 +67,11 @@ function Board() {
           }
         };
     
+       if(user){
         fetchCards();
-      }, [cards]);
+       }
 
-    const user = 'John Doe'; // Replace with the actual user's name
+      }, [dispatch, user]);
 
     const formatDate = (date) => {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -141,11 +153,20 @@ function Board() {
         return tasks.length;
     }
 
+    const { logout, isLoading } = useLogout();
+
+    const handleLogout = () => {
+        logout();
+    };
+
   return (
     <div className="board">
         <div className="top-section">
-          <div className="user-greeting">Hello {user}</div>
+          {user && (<div className="user-greeting">Hello {user.name}</div>)}
           <div className="date">{formatDate(new Date())}</div>
+          <button onClick={handleLogout} disabled={isLoading}>
+            {isLoading ? 'Logging out...' : 'Logout'}
+          </button>
         </div>
         <div className="bottom-section">
             <div className="top-bottom-section">

@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
 import axios from 'axios';
 import { useCardsContext } from '../hooks/useCardsContext';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 function Modal({handleCloseModal}) {
   const [tasks, setTasks] = useState([]);
@@ -13,6 +14,8 @@ function Modal({handleCloseModal}) {
   const [dueDate, setDueDate] = useState('')
 
   const {dispatch} = useCardsContext();
+
+  const {user} = useAuthContext();
 
   const addNewTask = () => {
     const newId = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
@@ -42,6 +45,17 @@ function Modal({handleCloseModal}) {
       return;
     }
 
+    const token = localStorage.getItem('token'); // Retrieve the token from local storage
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}` // Set the token in the Authorization header
+      }
+    };
+
+    //console.log(config);
+    //console.log(token);
+
     // Send data to backend
     try {
         const response = await axios.post('http://localhost:5000/api/cards', {
@@ -49,7 +63,7 @@ function Modal({handleCloseModal}) {
           priority,
           tasks,
           dueDate
-        });
+    }, config);
   
         console.log('Response from backend:', response.data);
   

@@ -3,12 +3,16 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import '../styles/Login.css';
 import { useNavigate } from 'react-router-dom';
+import useRegister from '../hooks/useRegister';
 
 const Registration = () => {
+  
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const {register, isLoading, error} = useRegister()
   const navigate = useNavigate();
 
   const handleLoginClick = ()=>{
@@ -17,21 +21,15 @@ const Registration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log(name, email, password);
-
-    try {
-      await axios.post('http://localhost:5000/api/user/register', {
-        name,
-        email,
-        password,
-      });
-
-      alert('User registered successfully');
-      navigate('/login')
-    } catch (error) {
-      console.error(error);
+    
+    // Check if password and confirm password match
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
     }
+
+    await register(name, email, password);
+    
   };
 
   return (
@@ -84,7 +82,11 @@ const Registration = () => {
           </label>
           <br />
 
-          <button type="submit">Register</button>
+          <button type="submit" disabled={isLoading}>
+                    {isLoading ? 'Registering...' : 'Register'}
+                </button>
+          {error && <div>{error}</div>}
+
           <p className='register-link'>Have no account yet?</p>
           <button className="register-btn" onClick={handleLoginClick}>Login</button>
         </form>
